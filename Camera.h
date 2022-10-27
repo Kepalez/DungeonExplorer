@@ -35,19 +35,23 @@ class Camera{
     }
     int getRow(){return row;}
     int getColumn(){return column;}
+    Character getTarget(){return target;}
     void printFrame(){
         HANDLE hcon;
-        CHAR_INFO chiBuffer[49]; //[(range*2+1)*(range*2+1)]
+        CHAR_INFO chiBuffer[81]; //[(range*2+1)*(range*2+1)]
         COORD bufCoord = {0,0}; 
         COORD size = {(SHORT)(range*2+1),(SHORT)(range*2+1)};
-        SMALL_RECT writeRect = {0,0,(SHORT)(range*2+1),(SHORT)(range*2+1)};
+        SMALL_RECT writeRect = {20,0,(SHORT)((range*2+1)+20),(SHORT)((range*2+1)+0)};
         hcon = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleCursorPosition(hcon,bufCoord);
         int c = 0;
         for(int i = 0;i < range*2+1;i++){
             for(int j = 0;j < range*2+1;j++){
                 chiBuffer[c].Char.AsciiChar = mazmorra[row-range+i][column-range+j];
-                chiBuffer[c++].Attributes = FOREGROUND_INTENSITY;
+                if(mazmorra[row-range+i][column-range+j] == 'M' && (i != range || j != range)) chiBuffer[c].Attributes = FOREGROUND_RED;
+                else if(mazmorra[row-range+i][column-range+j] == 'C' && (i != range || j != range)) chiBuffer[c].Attributes = FOREGROUND_RED | FOREGROUND_GREEN;
+                else chiBuffer[c].Attributes = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED;
+                c++;
             }
         }
         WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE),chiBuffer,size,bufCoord,&writeRect);

@@ -9,6 +9,8 @@
 #include <windows.h>
 #include <cstdio>
 #include <conio.h>
+#include <pthread.h>
+#include <fstream>
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -16,3 +18,5 @@
 #define KEY_RIGHT 77
 
 using namespace std;
+
+//g++ DungeonExplorer.cpp -o DungeonExplorer -pthread

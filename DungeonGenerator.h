@@ -51,7 +51,7 @@ void dibujarSala(Sala act){
                     for(int k = 1;k <= tamanoSalas;k++){
                         mazmorra[i-k][j] = '.';
                         espaciosDisponibles.push_back(pair<int,int>(i-k,j));
-                        mazmorra[i-k][j+1] = 178;
+                        mazmorra[i-k][j+1] = (char)178;
                         mazmorra[i-k][j-1] = 178;
                     }
                 }
@@ -184,6 +184,9 @@ void generarDungeon(){
         }
         dibujarSala(salasGeneradas.front());
         salasGeneradas.pop();
+        if(salasGeneradas.empty()){
+            mazmorra[fil+tamanoSalas/2][col+tamanoSalas/2] = 'E';
+        }
     }
 }
 
