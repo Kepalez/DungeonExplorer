@@ -12,3 +12,5 @@ When in the game, the player will have a limited vision of his surroundings, the
 
 ## Fouth step: Managing the scores
 This was probably the easiest part of the development, I used three different .txt files to make things easier, one file saves the scoreboard that will be shown to the player, another will store pure score, and the other one will store the pure name. If the player manages to win the game, the final score will be compared with the top 10 highest scores ever achieved. If the scores gets inside the top 10, it gets included. Easy right?
+
+See a preview of the game! -> [here](https://youtu.be/wkJRRR5yLks)
