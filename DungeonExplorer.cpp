@@ -4,6 +4,7 @@
 const int QantMonsters = 7;
 const int QantCoins = 15;
 vector <Monster> monsters;
+vector <pair<string,int>> highScores;
 int playerRow, playerCol;
 Camera camera;
 int points = 0;
@@ -250,8 +251,43 @@ void startGame(){
             getline(pantalla,texto);
             cout<<texto<<"\n";
         }
-        pantalla.seekg(0, ios::beg);
+        pantalla.seekg(0,ios::beg);
         pantalla.close();
+        Sleep(1000);
+        bool newHS = false;
+        pair<string,int> temp; 
+        for(int i = 0;i < 10;i++){
+            if(newHS){
+                swap(temp,highScores[i]);
+            }
+            else if(points > highScores[i].second){
+                newHS = true;
+                temp = highScores[i];
+                highScores[i] = pair<string,int>(player.getName(),points);
+            }
+        }
+        if(newHS){
+            ofstream names,scores,general;
+            names.open("NameBoard.txt",ios::trunc);
+            scores.open("PointsBoard.txt",ios::trunc);
+            general.open("ScoreBoard.txt",ios::trunc);
+            for(int i = 0;i < 10;i++){
+                scores<<to_string(highScores[i].second)<<"\n";
+                names<<highScores[i].first<<"\n";
+                general<<to_string(i+1)<<" "<<highScores[i].first<<" "<<to_string(highScores[i].second)<<"\n";
+            }
+            names.close();
+            scores.close();
+            general.close();
+            system("cls");
+            pantalla.open("ScoreBoard.txt",ios::in);
+            while(!pantalla.eof()){
+                getline(pantalla,texto);
+                cout<<texto<<"\n";
+            }
+            pantalla.seekg(0,ios::beg);
+            pantalla.close();
+        }
         Sleep(1000);
         system("pause");
     }else{
@@ -267,6 +303,20 @@ void startGame(){
     }
 }
 
+void showScoreboard(){
+    system("cls");
+    ifstream pantalla;
+    string texto;
+    pantalla.open("ScoreBoard.txt",ios::in);
+    while(!pantalla.eof()){
+        getline(pantalla,texto);
+        cout<<texto<<"\n";
+    }
+    pantalla.seekg(0,ios::beg);
+    pantalla.close();
+    system("pause");
+}
+
 void mainMenu(){
     int option = 1;
     string texto;
@@ -279,7 +329,8 @@ void mainMenu(){
     }
     pantalla.seekg(0, ios::beg);
     pantalla.close();
-    while(true){        //Loop Starts
+    bool exit = false;
+    while(exit == false){        //Loop Starts
         while(!pantalla.eof()){
             getline(pantalla,texto);
             cout<<texto<<"\n";
@@ -331,18 +382,17 @@ void mainMenu(){
                 
                 startGame();
                 break;
-                case 2:
-                //Open ScoreBoard
+                case 2:     //Show ScoreBoard
+                showScoreboard();
                 break;
-                case 3:
+                case 3:     //Exit game
+                exit = true;
                 break;
-                //Exit Game
             }
             system("cls");
-
-            return;
         }
-        switch(option){     //Print option
+        if(!exit){
+            switch(option){     //Print option
             case 1: //Open game option
             pantalla.open("MenuSelectGame.txt",ios::in);
             break;
@@ -353,19 +403,37 @@ void mainMenu(){
             case 3:
             pantalla.open("MenuSelectExit.txt",ios::in);
             //Exit game option
+            }
+            system("cls");
+            while(!pantalla.eof()){
+                getline(pantalla,texto);
+                cout<<texto<<"\n";
+            }
+            pantalla.seekg(0, ios::beg);
+            pantalla.close();
         }
-        system("cls");
-        while(!pantalla.eof()){
-            getline(pantalla,texto);
-            cout<<texto<<"\n";
-        }
-        pantalla.seekg(0, ios::beg);
-        pantalla.close();
     }
 }
 
 int main(){
     system("chcp 65001");
     system("cls");
+    ifstream names;
+    ifstream scores;
+    names.open("NameBoard.txt");
+    scores.open("PointsBoard.txt");
+    string n;
+    string s;
+    int snum;
+    while(!names.eof()){
+        getline(names,n);
+        getline(scores,s);
+        snum = stoi(s);
+        highScores.push_back(pair<string,int>(n,snum));
+    }
+    names.seekg(0,ios::beg);
+    scores.seekg(0,ios::beg);
+    names.close();
+    scores.close();
     mainMenu();
 }
